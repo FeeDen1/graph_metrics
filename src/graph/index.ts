@@ -3,7 +3,7 @@ export type NodeId = string | number;
 export interface Edge {
     source: NodeId;
     target: NodeId;
-    weight?: number; // Вес ребра, по умолчанию 1, если не указан
+    weight?: number;
 }
 
 export class Graph {
@@ -17,7 +17,6 @@ export class Graph {
         this.directed = directed;
     }
 
-    // Добавление нового узла (если ещё не существует)
     addNode(node: NodeId): void {
         if (!this.nodes.has(node)) {
             this.nodes.add(node);
@@ -25,7 +24,6 @@ export class Graph {
         }
     }
 
-    // Добавление ребра между узлами, с опциональным весом
     addEdge(source: NodeId, target: NodeId, weight: number = 1): void {
         this.addNode(source);
         this.addNode(target);

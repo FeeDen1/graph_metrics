@@ -14,21 +14,18 @@ import { Graph, NodeId } from '../graph';
 export function clusteringCoefficient(graph: Graph): Map<NodeId, number> {
     const C = new Map<NodeId, number>();
 
-    // вспомогательная проверка ребра u–v (для неориентированного графа оба направления)
     const hasEdge = (u: NodeId, v: NodeId) => {
         const outs = graph.adjList.get(u) || [];
         return outs.some(e => e.neighbor === v);
     };
 
     for (const v of graph.nodes) {
-        // собрать уникальных соседей
         const neigh = (graph.adjList.get(v) || []).map(e => e.neighbor);
         const k = neigh.length;
         if (k < 2) {
             C.set(v, 0);
             continue;
         }
-        // посчитать, сколько рёбер среди всех пар соседей
         let edgesBetween = 0;
         for (let i = 0; i < k; i++) {
             for (let j = i + 1; j < k; j++) {
@@ -38,7 +35,6 @@ export function clusteringCoefficient(graph: Graph): Map<NodeId, number> {
                 }
             }
         }
-        const possible = (k * (k - 1)) / 2;
         C.set(v, (2 * edgesBetween) / (k * (k - 1)));
     }
 

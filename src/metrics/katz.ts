@@ -28,7 +28,6 @@ export function katzCentrality(
     const maxIter = options.maxIterations ?? 100;
     const tol     = options.tol ?? 1e-6;
 
-    // 1) Соберём список входящих соседей
     const incoming = new Map<NodeId, NodeId[]>();
     for (const v of graph.nodes) incoming.set(v, []);
     for (const u of graph.nodes) {
@@ -37,7 +36,6 @@ export function katzCentrality(
         }
     }
 
-    // 2) Инициализация x⁽⁰⁾ = β для всех
     const x = new Map<NodeId, number>();
     const xNew = new Map<NodeId, number>();
     for (const v of graph.nodes) {
@@ -45,11 +43,9 @@ export function katzCentrality(
         xNew.set(v, beta);
     }
 
-    // 3) Итерационный процесс
     for (let iter = 0; iter < maxIter; iter++) {
         let diff = 0;
         for (const v of graph.nodes) {
-            // β + α · sum_{u→v} x(u)
             let sumIn = 0;
             for (const u of incoming.get(v)!) {
                 sumIn += x.get(u)!;
@@ -59,7 +55,6 @@ export function katzCentrality(
             diff = Math.max(diff, Math.abs(xv - x.get(v)!));
         }
 
-        // обновляем и проверяем сходимость
         for (const v of graph.nodes) {
             x.set(v, xNew.get(v)!);
         }

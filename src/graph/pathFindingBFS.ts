@@ -30,6 +30,30 @@ export function bfs(graph: Graph, start: NodeId): Map<NodeId, number> {
     return distances;
 }
 
+export function bfsRestricted(
+    graph: Graph,
+    start: NodeId,
+    allowed: Set<NodeId>
+): Map<NodeId, number> {
+    const dist = new Map<NodeId, number>();
+    allowed.forEach(v => dist.set(v, Infinity));
+    dist.set(start, 0);
+
+    const q: NodeId[] = [start];
+    while (q.length) {
+        const v = q.shift()!;
+        const dv = dist.get(v)!;
+        for (const { neighbor: w } of graph.adjList.get(v) || []) {
+            if (!allowed.has(w)) continue;
+            if (dist.get(w)! === Infinity) {
+                dist.set(w, dv + 1);
+                q.push(w);
+            }
+        }
+    }
+    return dist;
+}
+
 export function extendedBFS(graph: Graph, start: NodeId): BFSSearchResult {
     const dist = new Map<NodeId, number>();
     const sigma = new Map<NodeId, number>();
